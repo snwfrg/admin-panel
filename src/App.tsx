@@ -1,9 +1,49 @@
+import { useState, useEffect } from 'react'
+import LoginForm from './components/LoginForm'
+import { authService } from './services/auth'
+
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    setIsAuthenticated(authService.isAuthenticated())
+    setIsLoading(false)
+  }, [])
+
+  const handleLogin = async (email: string, password: string) => {
+    await authService.login(email, password)
+    setIsAuthenticated(true)
+  }
+
+  const handleLogout = () => {
+    authService.logout()
+    setIsAuthenticated(false)
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-lg">Loading...</div>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return <LoginForm onLogin={handleLogin} />
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-900">Admin Panel</h1>
+          <button
+            onClick={handleLogout}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+          >
+            Logout
+          </button>
         </div>
       </header>
       
