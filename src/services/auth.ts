@@ -8,7 +8,7 @@ interface LoginResponse {
 }
 
 class AuthService {
-  private baseUrl = 'https://api.miramedical.io/api/v4'
+  private baseUrl = 'https://dev-api.miramedical.io/api/v4'
 
   async login(email: string, password: string): Promise<LoginResponse> {
     try {
